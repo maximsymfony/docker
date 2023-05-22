@@ -2,10 +2,10 @@ version: "3.8"
 
 services:
   php-fpm:
-    container_name: php-fpm
+    container_name: php-fpm-${COMPOSE_PROJECT_NAME}
     build:
       context: ./../
-      dockerfile: ./docker/php-fpm/Dockerfile
+      dockerfile: ./macos-docker/php-fpm/Dockerfile
       args:
         - PUID=${PUID}
         - PGID=${PGID}
@@ -18,8 +18,19 @@ services:
     ports:
       - ${NGINX_HOST_HTTP_PORT}:8080
 
+#  nginx:
+#    container_name: nginx-${COMPOSE_PROJECT_NAME}
+#    build:
+#      context: ./nginx
+#    ports:
+#      - ${NGINX_HOST_HTTP_PORT}:80
+#    volumes:
+#      - ..:/var/www:rw
+#    depends_on:
+#      - php-fpm
+
   postgres:
-    container_name: postgres
+    container_name: postgres-${COMPOSE_PROJECT_NAME}
     build:
       context: ./postgres
     ports:
@@ -29,7 +40,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - db_data:/var/lib/postgresql/data:rw
+      - ./db_data:/var/lib/postgresql/data:rw
 
 volumes:
   db_data:

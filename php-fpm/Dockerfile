@@ -4,6 +4,12 @@ FROM php:8.2.0-fpm-alpine
 RUN apk add --no-cache curl git build-base zlib-dev oniguruma-dev autoconf bash
 RUN apk add --update linux-headers
 
+# Install PHP Extensions \
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
+    install-php-extensions gd zip intl imap xsl pgsql opcache bcmath mysqli pdo_pgsql redis amqp
+RUN #docker-php-ext-configure zip && docker-php-ext-install zip
+
 # Xdebug
 ARG INSTALL_XDEBUG=false
 RUN if [ ${INSTALL_XDEBUG} = true ]; \
@@ -11,19 +17,18 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; \
       pecl install xdebug && docker-php-ext-enable xdebug; \
     fi;
 
-COPY ./docker/php-fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY ./macos-docker/php-fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Postgres
 RUN apk add --no-cache libpq-dev && docker-php-ext-install pdo_pgsql
 
 # Nginx
 RUN apk add --update --no-cache nginx
-COPY ./docker/php-fpm/nginx.conf /etc/nginx/
-RUN chown -Rf www-data:www-data /var/lib/nginx
+COPY ./macos-docker/php-fpm/nginx.conf /etc/nginx/
 
 # Supervisor
 RUN apk add --no-cache supervisor
-COPY ./docker/php-fpm/supervisord.conf /etc/supervisord.conf
+COPY ./macos-docker/php-fpm/supervisord.conf /etc/supervisord.conf
 
 # Configure non-root user.
 ARG PUID=1000
@@ -47,9 +52,10 @@ RUN if [ ${BUILD_MODE} = dev ]; \
       composer install --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader; \
     fi;
 RUN chown -R www-data:www-data /var/www/vendor/
+RUN chown -R www-data:www-data /var/lib/nginx/
 
 EXPOSE 777
 
-CMD ["/bin/sh", "./docker/php-fpm/run.sh"]
+CMD ["/bin/sh", "./macos-docker/php-fpm/run.sh"]
 
 

@@ -2,7 +2,7 @@
 # Variables
 ##################
 
-DOCKER_COMPOSE = docker-compose -f ./docker/docker-compose.yml
+DOCKER_COMPOSE = docker-compose -f ./macos-docker/docker-compose.yml
 DOCKER_COMPOSE_PHP_FPM_EXEC = ${DOCKER_COMPOSE} exec -u www-data php-fpm
 
 ##################
@@ -50,8 +50,8 @@ php: app_bash
 test:
 	${DOCKER_COMPOSE} exec -u www-data php-fpm bin/phpunit
 cache:
-	docker-compose -f ./docker/docker-compose.yml exec -u www-data php-fpm bin/console cache:clear
-	docker-compose -f ./docker/docker-compose.yml exec -u www-data php-fpm bin/console cache:clear --env=test
+	docker-compose -f ./macos-docker/docker-compose.yml exec -u www-data php-fpm bin/console cache:clear
+	docker-compose -f ./macos-docker/docker-compose.yml exec -u www-data php-fpm bin/console cache:clear --env=test
 
 ##################
 # Database
