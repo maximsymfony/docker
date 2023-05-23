@@ -43,6 +43,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./db_data:/var/lib/postgresql/data:rw
+    networks:
+      - client-server
 
 volumes:
   db_data:
