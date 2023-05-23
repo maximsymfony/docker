@@ -7,7 +7,7 @@ RUN apk add --update linux-headers
 # Install PHP Extensions \
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
-    install-php-extensions gd zip intl imap xsl pgsql opcache bcmath mysqli pdo_pgsql redis amqp
+    install-php-extensions gd zip intl imap xsl pgsql opcache bcmath mysqli pdo_pgsql redis amqp sockets
 RUN #docker-php-ext-configure zip && docker-php-ext-install zip
 
 # Xdebug
@@ -54,7 +54,7 @@ RUN if [ ${BUILD_MODE} = dev ]; \
 RUN chown -R www-data:www-data /var/www/vendor/
 RUN chown -R www-data:www-data /var/lib/nginx/
 
-EXPOSE 777
+EXPOSE 888
 
 CMD ["/bin/sh", "./macos-docker/php-fpm/run.sh"]
 
