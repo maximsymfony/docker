@@ -10,6 +10,7 @@ services:
         - PUID=${PUID}
         - PGID=${PGID}
         - INSTALL_XDEBUG=${INSTALL_XDEBUG}
+        - NGINX_HOST_HTTP_PORT=${NGINX_HOST_HTTP_PORT}
     environment:
       PHP_IDE_CONFIG: "serverName=Docker"
     volumes:

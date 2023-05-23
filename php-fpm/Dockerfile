@@ -54,7 +54,8 @@ RUN if [ ${BUILD_MODE} = dev ]; \
 RUN chown -R www-data:www-data /var/www/vendor/
 RUN chown -R www-data:www-data /var/lib/nginx/
 
-EXPOSE 888
+ARG NGINX_HOST_HTTP_PORT=333
+EXPOSE ${NGINX_HOST_HTTP_PORT}
 
 CMD ["/bin/sh", "./macos-docker/php-fpm/run.sh"]
 
